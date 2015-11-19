@@ -27,7 +27,7 @@ The files you need are
 
 * MLO-beaglebone
 * u-boot-beaglebone.img
-* <some-image-name>-image-beaglebone.tar.xz
+* \<some-image-name\>-image-beaglebone.tar.xz
 
 If you already have them, then you are ready to get started.
 
@@ -45,7 +45,7 @@ You will also need the name of the *dtb* you want the kernel to use.
 
 The normal procedure is to include it in your kernel recipe so that the Yocto kernel scripts will have built and installed in onto the *rootfs* for you.
 
-Update **fdtfile** in `uEnv.txt` and `emmc_uEnv.txt` files with the *dtb* you want to use instead of the default `bbb-nohdmi.dtb` that I use for testing.
+Update the **fdtfile** variable in `uEnv.txt` and `emmc_uEnv.txt` with the *dtb* you want to use instead of the default `bbb-nohdmi.dtb` that I use for testing.
 
 #### SD card install
 
