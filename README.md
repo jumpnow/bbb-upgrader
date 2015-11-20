@@ -90,19 +90,17 @@ It chooses the new *rootfs* partition based on whichever partition is not the cu
 
 The `/dev/mmcblk0p5` partition is used by the `uEnv.txt` u-boot script to read and write some flag files to determine which partition to load as the *rootfs*. 
 
-The `manage_boot_flag_partition.sh` is a Linux script that also manages flag files on this partition.
-
-This is the script that confirms that the new partition actually worked.
+`manage_boot_flag_partition.sh` is the script that confirms the new *rootfs* actually worked. It does this by modifying files on `/dev/mmcblk0p5`.
 
 If this script isn't run the first time after booting a new *rootfs* following an upgrade, the system will revert back to the old *rootfs* on the next boot.
 
-The `manage_boot_flag_partition.sh` script can be run anytime and I would normally add it to the systems as an init script. If there is nothing to do, the `manage_boot_flag_partition.sh` script won't do anything.
+The `manage_boot_flag_partition.sh` script is safe to run anytime, it does nothing if there is nothing to do. My thinking is it would be added to the scripts run by the system init process, whatever type of init you are running.
 
 The `bbb_upgrade.sh` is responsible for formatting `/dev/mmcblk0p5` and populating the initial flag files.
 
 ### Running an Upgrade
 
-A locaton is needed for the new image tarball, so make use of `/dev/mmcblk0p6`
+A location is needed for the new image tarball, so make use of `/dev/mmcblk0p6`
 
     mkfs.ext4 -q -L DATA /dev/mmcblk0p6
 	mkdir /data
@@ -151,14 +149,14 @@ After rebooting note the new rootfs
     root@bbb:~# cat /proc/cmdline
     console=ttyO0,115200n8 consoleblank=0 root=/dev/mmcblk0p3 ro rootfstype=ext4 rootwait
 
-	root@bbb:~# mount | grep mmcblk0
+    root@bbb:~# mount | grep mmcblk0
     /dev/mmcblk0p3 on / type ext4 (rw,relatime,data=ordered)
     /dev/mmcblk0p6 on /data type ext4 (rw,relatime,data=ordered)
 
 
-Make sure to run `manage_boot_flag_partition.sh` or the next reboot will revert back to `/dev/mmcblk0p2`.
+Now would be the time to  run `manage_boot_flag_partition.sh` or the next reboot will revert back to `/dev/mmcblk0p2`.
 
-The upgrade script copied over the old `/etc/fstab` and a `/data` mount point for `/dev/mmcblk0p6` so
+The upgrade script copied over the old `/etc/fstab` and a `/data` mount point for `/dev/mmcblk0p6` so `/data` is still there
 
     root@bbb:~# cd /data
     root@bbb:/data# ./manage_boot_flag_partition.sh
@@ -174,11 +172,12 @@ The upgrade script copied over the old `/etc/fstab` and a `/data` mount point fo
     Unmounting /dev/mmcblk0p5 : OK
     root@bbb:/data#
 
+
 ### Summary
 
-There is plenty of script cleanup and simplification to be done.
+There is still script cleanup and simplification to be done. And more testing.
 
-But the basic framework is in place and working.
+But the basic framework is in place and seems to be working.
 
 
 [upgrading-bbb-systems]: http://www.jumpnowtek.com/beaglebone/Upgrade-strategy-for-BBB.html
