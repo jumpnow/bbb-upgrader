@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# make sure there are no eMMC mounted partitions
-mount | grep -q mmcblk1
+DEV=/dev/mmcblk1
+
+mount | grep -q ${DEV} 
 
 if [ $? -eq 0 ]; then
 	echo "Found mounted eMMC partitions."
